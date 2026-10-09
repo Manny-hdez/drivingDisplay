@@ -26,7 +26,6 @@ npm run build
 4. Change one recorded position and predict which section of the replay changes before running it.
 5. Implement a button that advances replay time by one second, keeping time within the recording and playback paused.
 
-Coaching preference: walk through this implementation together; ask one code-level question at a time, give hints before answers, and check understanding through predictions, debugging, and small edits. Do not turn every interaction into a quiz or block requested progress on quiz answers.
 
 The UI uses a synthetic seven-sample recording. The velocity readout is the current segment's average speed (zero after completion). Traffic lights are decorative. There is no collision evaluation, server, cloud infrastructure, or AI inference yet.
 
