@@ -3,10 +3,10 @@ export const trajectory = [
   { t: 0, x: -42, z: 2 },
   { t: 3, x: -18, z: 2 },
   { t: 5, x: -8, z: 2 },
-  { t: 7, x: -8, z: 2 },
-  { t: 9, x: 0, z: 2 },
-  { t: 12, x: 24, z: 2 },
-  { t: 14, x: 42, z: 2 },
+  { t: 8, x: -8, z: 2 },
+  { t: 10, x: 0, z: 2 },
+  { t: 13, x: 24, z: 2 },
+  { t: 15, x: 42, z: 2 },
 ];
 export const duration = trajectory.at(-1).t;
 
