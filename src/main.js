@@ -3,15 +3,18 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { duration, sampleAt, trajectory } from "./replay.js";
 import "./style.css";
 
+const departureTime = trajectory[3].t;
+
 document.querySelector("#app").innerHTML = `
   <header><a class="brand" href="/">◈ <span>DRIVING DISPLAY</span></a><span class="divider">/</span><span>Replay lab</span><span class="local"><i></i> LOCAL WORKSPACE</span></header>
   <main><aside><div class="eyebrow">WORKSPACE / 01</div><h1>Observe.<br>Understand.<br>Replay.</h1><p class="intro">Explore vehicle behavior, one moment at a time.</p>
-  <div class="section-label">SCENARIO</div><div class="scenario"><span class="scenario-icon">╋</span><div><strong>Intersection approach</strong><small>Recorded demo · 14 seconds</small></div><span class="selected">●</span></div>
+  <div class="section-label">SCENARIO</div><div class="scenario"><span class="scenario-icon">╋</span><div><strong>Intersection approach</strong><small>Recorded demo · ${duration} seconds</small></div><span class="selected">●</span></div>
   <div class="section-label">RECORDING DETAILS</div><dl><dt>Vehicle</dt><dd>Ego / 01</dd><dt>Environment</dt><dd>Urban intersection</dd><dt>Samples</dt><dd>7 keyframes</dd><dt>Source</dt><dd>Synthetic fixture</dd></dl>
   <div class="note"><span>01 / FIRST PRINCIPLE</span><h3>Time drives motion.</h3><p>Frames show a position in the recording. More frames make playback smoother, not faster.</p><button id="learn">Explore the interpolation ↗</button></div><div class="aside-footer">REPLAY WORKBENCH <span>v0.1</span></div></aside>
   <section class="workspace"><div class="view-header"><div><span class="eyebrow">SCENARIO VIEW</span><h2>Intersection approach <span>DEMO</span></h2></div><div class="camera-buttons"><button id="orbit" class="active">Perspective</button><button id="top">Top view</button><button id="reset">Reset view</button></div></div>
   <div id="viewport"><div class="scene-label"><i></i> <span id="state">READY</span><span class="label-divider">|</span> EGO TRAJECTORY</div><div class="legend"><span class="dot"></span> Ego vehicle <span class="line"></span> Recorded path</div><div class="scene-hint">Drag to orbit · Scroll to zoom</div><div class="compass">N<br>↑</div></div>
-  <div class="transport"><div class="transport-top"><div class="playback"><button id="restart" aria-label="Restart replay">↤</button><button id="play" aria-label="Play replay">▶</button><span id="time">00.00</span><span class="muted">/ 14.00 s</span></div><label class="speed-label">Playback <select id="rate" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label></div><input id="timeline" aria-label="Replay time in seconds" type="range" min="0" max="14" step="0.01" value="0"><div class="ticks"><span>0 s</span><button data-seek="5">5 s · stop begins</button><button data-seek="7">7 s · depart</button><span>14 s</span></div></div>
+  <div class="transport"><div class="transport-top"><div class="playback"><button id="restart" aria-label="Restart replay">↤</button><button id="play" aria-label="Play replay">▶</button><span id="time">00.00</span><span class="muted">/ ${duration.toFixed(2)} s</span></div><label class="speed-label">Playback <select id="rate" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label></div><input id="timeline" aria-label="Replay time in seconds" type="range" min="0" max="${duration}" step="0.01" value="0"><div class="ticks"><span>0 s</span><button data-seek="5">5 s · stop begins</button><button data-seek="${departureTime}">
+  ${departureTime} s · depart</button><span>${duration} s</span></div></div>
   <div class="metrics"><article><span>VELOCITY</span><strong id="velocity">8.0 <small>m/s</small></strong><p>Current trajectory segment</p></article><article><span>POSITION · X</span><strong id="position">−42.0 <small>m</small></strong><p>World-space coordinate</p></article><article><span>REPLAY PROGRESS</span><strong id="progress">0 <small>%</small></strong><p id="phase">Approaching intersection</p></article></div>
   <details id="lesson"><summary>Under the hood <span>How the replay finds a position</span></summary><div class="lesson-body"><p>The car is between two recorded samples. We calculate how far the replay time lies between their timestamps, then blend their positions by that fraction.</p><code id="formula"></code><p><strong>Try it:</strong> scrub to 6 seconds. The timestamps change, but both surrounding positions are −8 meters. Why does the car stay still?</p></div></details>
   </section></main>`;
@@ -167,7 +170,7 @@ function update() {
   $("#phase").textContent =
     time < 5
       ? "Approaching intersection"
-      : time < 7
+      : time < departureTime
         ? "Recorded stop"
         : time < duration
           ? "Crossing and departing"

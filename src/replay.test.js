@@ -5,6 +5,10 @@ test("interpolates positions and preserves a recorded stop", () => {
   assert.equal(sampleAt(1.5).x, -30);
   assert.equal(sampleAt(6).x, -8);
   assert.equal(sampleAt(6).speed, 0);
+  assert.equal(sampleAt(7.5).x, -8);
+  assert.equal(sampleAt(7.5).speed, 0);
+  assert.equal(sampleAt(9).x, -4);
+  assert.equal(sampleAt(9).speed, 4);
 });
 test("clamps scrubbing outside the recording", () => {
   assert.equal(sampleAt(-5).x, -42);
